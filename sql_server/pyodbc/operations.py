@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db.backends import BaseDatabaseOperations
 
 from sql_server.pyodbc.compat import smart_text, string_types, timezone
+from sql_server.pyodbc import query
 import datetime
 import time
 import decimal
@@ -195,6 +196,15 @@ class DatabaseOperations(BaseDatabaseOperations):
 
     def max_name_length(self):
         return 128
+
+    def query_class(self, DefaultQueryClass):
+        """
+        Given the default Query class, returns a custom Query class
+        to use for this backend. Returns None if a custom Query isn't used.
+        See also BaseDatabaseFeatures.uses_custom_query_class, which regulates
+        whether this method is called at all.
+        """
+        return query.query_class(DefaultQueryClass)
 
     def quote_name(self, name):
         """
